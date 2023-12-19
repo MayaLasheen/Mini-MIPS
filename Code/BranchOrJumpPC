@@ -1,0 +1,35 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+use IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_SIGNED.ALL;
+
+entity BranchOrJumpPC is
+    Port ( signImmD : in STD_LOGIC_VECTOR (31 downto 0);
+           dataR1D : in STD_LOGIC_VECTOR (31 downto 0);
+           dataR2D : in STD_LOGIC_VECTOR (31 downto 0);
+           jumpD : in STD_LOGIC;
+           PCBranchD : out STD_LOGIC_VECTOR (31 downto 0));
+end BranchOrJumpPC;
+
+architecture Behavioral of BranchOrJumpPC is
+
+    component MUX2to1 is
+        generic (
+            size : integer := 5
+        );
+        Port ( x : in STD_LOGIC_VECTOR (size-1 downto 0);
+               y : in STD_LOGIC_VECTOR (size-1 downto 0);
+               s : in STD_LOGIC;
+               z : out STD_LOGIC_VECTOR (size-1 downto 0));
+    end component;
+    
+    signal valueAdded : STD_LOGIC_VECTOR (31 DOWNTO 0);
+
+begin
+
+MUX32bits1 : MUX2to1 generic map (size => 32) port map (dataR2D, dataR1D, jumpD, valueAdded);
+PCBranchD <= (valueAdded + signImmD);
+
+end Behavioral;
